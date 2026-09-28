@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UPI Pulse - Digital Payments Growth in India</title>
+  <meta name="description" content="Interactive dashboard of India's UPI growth: monthly transactions, value, ticket size, banks live and app share, Apr 2017 - Jul 2025.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#overview" aria-label="UPI Pulse home">
+      <span class="brand-mark" aria-hidden="true">&#8377;</span>
+      <span class="brand-name">UPI Pulse<small>Digital payments growth in India</small></span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#overview" data-nav="overview">Overview</a>
+      <a href="#trends" data-nav="trends">Trends</a>
+      <a href="#growth" data-nav="growth">Growth</a>
+      <a href="#ecosystem" data-nav="ecosystem">Ecosystem</a>
+      <a href="#data" data-nav="data">Data</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero" id="overview" aria-labelledby="hero-title">
+    <div>
+      <span class="eyebrow-chip"><i></i><span>India &middot; Digital payments</span><span id="heroSpan">Apr 2017 - Jul 2025</span></span>
+      <h1 id="hero-title">From a niche experiment to India&rsquo;s payment backbone</h1>
+      <p class="lead" id="heroLead"></p>
+      <div class="hero-actions">
+        <a class="btn btn-light" href="#trends">Explore the dashboard &darr;</a>
+        <a class="btn btn-ghost" href="../data/upi_monthly.csv" download>Download dataset (CSV)</a>
+      </div>
+    </div>
+    <div class="hero-stats" id="heroStats" aria-label="Latest month highlights"></div>
+  </section>
+
+  <div class="filters-wrap">
+    <div class="filters" role="group" aria-label="Dashboard filters">
+      <div class="f-group">
+        <span class="f-label">Period</span>
+        <div class="chips" id="presetChips"></div>
+      </div>
+      <div class="f-group select-pair">
+        <label class="f-label" for="selFrom">From</label>
+        <select id="selFrom"></select>
+        <label class="f-label" for="selTo">To</label>
+        <select id="selTo"></select>
+      </div>
+      <div class="f-group">
+        <span class="f-label">Measure</span>
+        <div class="seg" id="metricSeg" role="group" aria-label="Measure">
+          <button type="button" data-metric="vol" aria-pressed="true">Transactions</button>
+          <button type="button" data-metric="val" aria-pressed="false">Value (&#8377;)</button>
+        </div>
+      </div>
+      <div class="f-group">
+        <span class="f-label">Trend scale</span>
+        <div class="seg" id="scaleSeg" role="group" aria-label="Trend chart scale">
+          <button type="button" data-scale="linear" aria-pressed="true">Linear</button>
+          <button type="button" data-scale="log" aria-pressed="false">Log</button>
+        </div>
+      </div>
+      <div class="range-summary" id="rangeSummary" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="kpis" id="kpis" aria-label="Key indicators for the selected period"></div>
+
+  <section class="block" id="trends" aria-labelledby="trends-h">
+    <div class="sec-head">
+      <span class="sec-eyebrow">Trends</span>
+      <h2 id="trends-h">How fast did UPI scale?</h2>
+      <p>Monthly activity for the selected period. Hover any month for exact values; dots mark policy and product milestones.</p>
+    </div>
+    <div class="grid">
+      <div class="card s8">
+        <div class="card-head">
+          <div><h3 id="mainTitle">Monthly transactions</h3><p id="mainSub"></p></div>
+        </div>
+        <div class="chart-box tall">
+          <canvas id="mainChart" role="img" aria-label="Line chart of monthly UPI activity. The same numbers are in the data table below."></canvas>
+        </div>
+        <div class="caption"><span><i class="dot"></i>Milestone month &mdash; hover for details</span><span id="scaleHint"></span></div>
+      </div>
+      <div class="card s4">
+        <div class="card-head"><div><h3>What the numbers say</h3><p>Calculated live for your selected period</p></div></div>
+        <div class="insights" id="insights"></div>
+      </div>
+
+      <div class="card s6">
+        <div class="card-head"><div><h3 id="yoyTitle">Year-on-year growth</h3><p>Growth vs the same month a year earlier &mdash; slowing in % terms as the base explodes</p></div></div>
+        <div class="chart-box">
+          <canvas id="yoyChart" role="img" aria-label="Line chart of year-on-year growth in UPI activity."></canvas>
+          <div class="empty-note" id="yoyEmpty" hidden>Year-on-year growth needs a prior-year base of at least 100 million transactions. Choose a later period.</div>
+        </div>
+        <div class="caption">Shown only where the same month a year earlier had &ge;100 mn transactions.</div>
+      </div>
+      <div class="card s6">
+        <div class="card-head"><div><h3>Average ticket size</h3><p>Value per transaction (&#8377;) &mdash; climbed to a 2020&ndash;21 peak, then drifted lower</p></div></div>
+        <div class="chart-box">
+          <canvas id="ticketChart" role="img" aria-label="Line chart of the average value per UPI transaction in rupees."></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="growth" aria-labelledby="growth-h">
+    <div class="sec-head">
+      <span class="sec-eyebrow">Growth</span>
+      <h2 id="growth-h">Year by year, month by month</h2>
+      <p>Annual totals by fiscal year (April&ndash;March), banks on the network, and a calendar of month-over-month momentum.</p>
+    </div>
+    <div class="grid">
+      <div class="card s7">
+        <div class="card-head"><div><h3 id="fyTitle">Fiscal-year totals</h3><p>Sum of the months inside your selected period</p></div></div>
+        <div class="chart-box">
+          <canvas id="fyChart" role="img" aria-label="Bar chart of UPI totals by fiscal year."></canvas>
+        </div>
+        <div class="caption">Lighter bars are partial years: only part of the fiscal year falls in your period, or is reported so far.</div>
+      </div>
+      <div class="card s5">
+        <div class="card-head"><div><h3>Banks live on UPI</h3><p>Approximate count of participating banks</p></div></div>
+        <div class="chart-box">
+          <canvas id="banksChart" role="img" aria-label="Line chart of the number of banks live on UPI."></canvas>
+        </div>
+      </div>
+      <div class="card s12">
+        <div class="card-head">
+          <div><h3 id="heatTitle">Month-over-month momentum</h3><p>Each cell is growth vs the previous month. Rows are fiscal years, columns run April to March.</p></div>
+        </div>
+        <div class="heat-scroll"><div class="heat" id="heatmap" role="table" aria-label="Month over month growth heatmap"></div></div>
+        <div class="heat-legend">
+          <span>Decline</span>
+          <span class="heat-bar" id="heatBar"></span>
+          <span>Growth</span>
+          <span>&middot; colours saturate at &plusmn;20%; hover for the exact figure</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="ecosystem" aria-labelledby="eco-h">
+    <div class="sec-head">
+      <span class="sec-eyebrow">Ecosystem</span>
+      <h2 id="eco-h">Who powers UPI, and what changed along the way</h2>
+      <p>App share is a set of December snapshots and is not affected by the period filter. Milestones follow your selected period.</p>
+    </div>
+    <div class="grid">
+      <div class="card s7">
+        <div class="card-head">
+          <div><h3>Share of UPI transactions by app</h3><p>Approximate, rounded to whole percentages</p></div>
+          <div class="legend" id="appLegend"></div>
+        </div>
+        <div class="chart-box short">
+          <canvas id="appChart" role="img" aria-label="Stacked bar chart of UPI transaction share by app for three December snapshots."></canvas>
+        </div>
+      </div>
+      <div class="card s5">
+        <div class="card-head"><div><h3>Milestones</h3><p>Policy and product moments in this period</p></div></div>
+        <ul class="timeline" id="milestones"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="data" aria-labelledby="data-h">
+    <div class="sec-head">
+      <span class="sec-eyebrow">Data</span>
+      <h2 id="data-h">The dataset behind every chart</h2>
+      <p>Every monthly record in your selected period. Sort by any column, search, or export what you see. This table is the accessible twin of every chart above.</p>
+    </div>
+    <div class="card">
+      <div class="table-tools">
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="tableSearch" type="search" placeholder="Search month, fiscal year or milestone" aria-label="Search the table">
+        </label>
+        <span class="table-count" id="tableCount"></span>
+        <button class="btn btn-brand" id="exportBtn" type="button">Export CSV</button>
+      </div>
+      <div class="table-wrap">
+        <table id="dataTable">
+          <thead><tr id="thead"></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>About this data.</b> Monthly UPI volumes are rounded reference figures based on NPCI&rsquo;s published UPI statistics and have been calibrated so each fiscal year adds up to NPCI&rsquo;s reported annual totals. Monthly value comes from volume &times; an interpolated average ticket size, calibrated the same way. Banks-live and app-share figures are approximate. They were not downloaded live from NPCI, so please verify against
+      <a href="https://www.npci.org.in/what-we-do/upi/product-statistics" target="_blank" rel="noopener">NPCI&rsquo;s official statistics</a>
+      before using them outside this project.
+    </div>
+  </section>
+</main>
+
+<footer>UPI Pulse &middot; a data analytics project on digital payments growth in India</footer>
+<div id="tip" role="tooltip"></div>
+
+<script src="vendor/chart.umd.min.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
