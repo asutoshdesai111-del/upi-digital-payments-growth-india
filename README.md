@@ -2,7 +2,7 @@
 
 An interactive dashboard and a 100-record dataset covering the growth of India's UPI payments, monthly from **Apr 2017 to Jul 2025**.
 
-**Live demo:** LIVE_URL_PLACEHOLDER
+**Live demo:** [https://upi-pulse-digital-payments.vercel.app](https://upi-pulse-digital-payments.vercel.app)
 
 ![UPI Pulse dashboard overview](docs/screenshots/dashboard-overview.png)
 
